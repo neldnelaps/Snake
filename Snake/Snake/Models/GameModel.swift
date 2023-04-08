@@ -31,17 +31,14 @@ class GameModel {
         return false
     }
     
-    private func randomizeFoodPoint() {
-        guard let addPoint else { return }
-        while isOnSnake(col: addPoint.coordinate.col, row: addPoint.coordinate.row) {
-            addPoint.randomizeFoodPoint()
-        }
-    }
-    
     func checkEating () {
-        if snake?.snake[0].col == addPoint?.coordinate.col && snake?.snake[0].row == addPoint?.coordinate.row {
-            snake?.eatAddPoint()
-            addPoint?.randomizeFoodPoint()
+        guard let snake, let addPoint else { return }
+        if snake.snake[0].col == addPoint.coordinate.col && snake.snake[0].row == addPoint.coordinate.row {
+            snake.eatAddPoint()
+            addPoint.randomizeFoodPoint()
+            while isOnSnake(col: addPoint.coordinate.col, row: addPoint.coordinate.row) {
+                addPoint.randomizeFoodPoint()
+            }
         }
     }
     

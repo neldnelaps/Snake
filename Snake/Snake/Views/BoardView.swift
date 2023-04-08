@@ -7,14 +7,20 @@
 
 import UIKit
 
+protocol BoardProtocol : AnyObject {
+    func swipeGesture(direction: UISwipeGestureRecognizer.Direction)
+}
+
 class BoardView: UIView {
+    
+    weak var boardDelegate : BoardProtocol?
     
     private let originX : CGFloat = 0
     private let originY : CGFloat = 0
     private var cellSize: CGFloat = 0
     
-    var snake: SnakeModel?
-    var addPoint: AddPointModel?
+    var snake: [SnakeCell]?
+    var addPoint: CGPoint?
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -35,7 +41,10 @@ class BoardView: UIView {
         drawGrid ()
         drawAddPoint()
         drawSnake()
+        addSwipe()
     }
+    
+// MARK: Drow object
     
     private func drawGrid () {
         
@@ -51,16 +60,12 @@ class BoardView: UIView {
             gridPath.addLine(to: CGPoint(x: originX + CGFloat(i) * cellSize, y: originY + CGFloat(GameModel.rows) * cellSize))
         }
         
-        let rect = CGRect(x: 0, y: 0, width: 256, height: 256)
-        let roundedRect = UIBezierPath(roundedRect: rect, cornerRadius: 50)
-        let circle = UIBezierPath(ovalIn: rect)
-        
         SnakeColor.grid.setStroke()
         gridPath.stroke()
     }
     
     private func drawSnake() {
-        guard let snake, !snake.snake.isEmpty, let head = snake.snake.first else { return }
+        guard let snake, !snake.isEmpty, let head = snake.first else { return }
         
         SnakeColor.snakeHead.setFill()
         UIBezierPath(
@@ -72,8 +77,8 @@ class BoardView: UIView {
             cornerRadius: 5).fill()
         
         SnakeColor.snakeBody.setFill()
-        for i in 1..<snake.snake.count {
-            let cell = snake.snake[i]
+        for i in 1..<snake.count {
+            let cell = snake[i]
             UIBezierPath(
                 roundedRect: CGRect(
                     x: originX + CGFloat(cell.col) * cellSize,
@@ -89,10 +94,25 @@ class BoardView: UIView {
         SnakeColor.foodPoint.setFill()
         UIBezierPath(
             roundedRect: CGRect(
-                x: originX + CGFloat(addPoint.coordinate.col) * cellSize,
-                y: originY + CGFloat(addPoint.coordinate.row) * cellSize,
+                x: originX + addPoint.x * cellSize,
+                y: originY + addPoint.y * cellSize,
                 width: cellSize,
                 height: cellSize),
             cornerRadius: 5).fill()
+    }
+    
+// MARK: UISwipeGestureRecognizer
+    
+    private func addSwipe() {
+        let directions: [UISwipeGestureRecognizer.Direction] = [.left, .right, .up, .down]
+        directions.forEach {
+            let swipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe))
+            swipe.direction = $0
+            self.addGestureRecognizer(swipe)
+        }
+    }
+
+    @objc private func handleSwipe(sender: UISwipeGestureRecognizer) {
+        boardDelegate?.swipeGesture(direction: sender.direction)
     }
 }

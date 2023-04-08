@@ -9,19 +9,12 @@ import Foundation
 import UIKit
 
 protocol JoystickProtocol: AnyObject {
-    func changeDirection (_ direction: MovingDirection)
+    func changePointLocation (_ point: CGPoint)
 }
 
 class JoystickView : UIView {
     
     weak var joystickDelegate : JoystickProtocol?
-    
-    private let triangleDown = [(x: -50.0, y: -50.0), (x: 0.0, y:0.0),(x: 50.0, y:-50.0)]
-    private let triangleUp = [(x: -50.0, y: 50.0), (x: 0.0, y:0.0),(x: 50.0, y:50.0)]
-    private let triangleLeft = [(x: -50.0, y: 50.0), (x: 0.0, y:0.0),(x: -50.0, y:-50.0)]
-    private let triangleRight = [(x: 50.0, y: 50.0), (x: 0.0, y:0.0),(x: 50.0, y:-50.0)]
-    
-    private var direction : MovingDirection = .left
     
     private let centerView = UIView()
     
@@ -77,46 +70,10 @@ class JoystickView : UIView {
             if bounds.contains(location) {
                 centerView.center = location
             }
-            let point = (x: Double(location.x - 50), y: Double(50 - location.y))
+            let point = CGPoint(x: location.x - 50, y: 50 - location.y)
             
-            let directionJoystick = defineDirection(point: point)
-            
-            if directionJoystick != direction {
-                direction = directionJoystick
-                joystickDelegate?.changeDirection(direction)
-            }
-        }
-    }
-    
-    private func defineDirection(point: (x: Double, y: Double)) -> MovingDirection {
-        if isPointInsideTriangle(point, triangleDown) {
-            return .down
-        }
-        if isPointInsideTriangle(point, triangleUp) {
-            return .up
-        }
-        if isPointInsideTriangle(point, triangleLeft) {
-            return .left
-        }
-        if isPointInsideTriangle(point, triangleRight) {
-            return .right
-        }
-        return direction
-    }
-    
-    private func isPointInsideTriangle ( _ point: (x: Double, y: Double), _ triangle: [(x: Double, y: Double)]) ->Bool {
-        let x1 = triangle[0].x, y1 = triangle[0].y
-        let x2 = triangle[1].x, y2 = triangle[1].y
-        let x3 = triangle[2].x, y3 = triangle[2].y
-        let x = point.x, y = point.y
-        
-        let areaTriangle = abs((x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2))/2)
-        
-        let areaTriangleFirst = abs((x1*(y2-y) + x2*(y3-y) + x*(y1-y2))/2)
-        let areaTriangleSecond = abs((x*(y2-y3) + x2*(y3-y) + x3*(y-y2))/2)
-        let areaTriangleThird = abs((x1*(y-y3) + x*(y3-y1) + x3*(y1-y))/2)
-        
-        return areaTriangle == areaTriangleFirst + areaTriangleSecond + areaTriangleThird
+            joystickDelegate?.changePointLocation(point)
 
+        }
     }
 }
