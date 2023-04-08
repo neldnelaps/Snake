@@ -46,5 +46,26 @@ class SnakeModel {
         let oldTail = snakeArray[snakeArray.count - 1]
         snakeArray.append(oldTail)
     }
+    
+    func checkDirection (_ direction: MovingDirection) {
+        switch direction {
+        case .left:
+            if movingDirection != .right {
+                movingDirection = .left
+            }
+        case .right:
+            if movingDirection != .left {
+                movingDirection = .right
+            }
+        case .up:
+            if movingDirection != .down {
+                movingDirection = .up
+            }
+        case .down:
+            if movingDirection != .up {
+                movingDirection = .down
+            }
+        }
+    }
 
 }
