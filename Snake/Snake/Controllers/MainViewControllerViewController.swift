@@ -16,8 +16,7 @@ class MainViewController: UIViewController {
     private let snakeModel = SnakeModel()
     private let addPointModel = AddPointModel()
     private let controlModel = ControlModel()
-    
-    private var timer = Timer()
+    private let gameTimer = GameTimer()
     
     override func loadView() {
         super.loadView()
@@ -29,41 +28,45 @@ class MainViewController: UIViewController {
         
         gameModel = GameModel(snake: snakeModel, addPoint: addPointModel)
         setDelegates()
-        startTimer()
+        gameTimer.startTimer()
     }
 
     private func setDelegates() {
         mainView.joystickView.joystickDelegate = self
         mainView.boardView.boardDelegate = self
-    }
-    
-// MARK: Timer
-    
-    private func startTimer() {
-        timer = Timer.scheduledTimer(timeInterval: 0.3,
-                                     target: self,
-                                     selector: #selector(timerAction),
-                                     userInfo: nil,
-                                     repeats: true)
-    }
-    
-    @objc private func timerAction () {
-        gameModel.checkEating()
-        snakeModel.checkDirection(controlModel.direction)
-        snakeModel.moveSnake()
-        
-        if !gameModel.isOnBoard() || !gameModel.crashTest() {
-            timer.invalidate()
-        }
-            
-        updateUI()
+        gameTimer.timerDelegate = self
     }
     
     private func updateUI() {
         mainView.boardView.snake = snakeModel.snake
         mainView.boardView.addPoint = CGPoint(x: addPointModel.coordinate.col, y: addPointModel.coordinate.row)
+        
+        mainView.scoreLabel.text = gameModel.gameScore.score
+        mainView.nextLevelLabel.text = gameModel.gameScore.nextLevel
+        
         mainView.boardView.setNeedsDisplay()
     }
+}
+
+// MARK: TimerProtocol
+
+extension MainViewController : TimerProtocol {
+    func timerAction() {
+        snakeModel.checkDirection(controlModel.direction)
+        snakeModel.moveSnake()
+        
+        if gameModel.checkNextLevel() {
+            gameTimer.speedIncrease()
+        }
+
+        if !gameModel.isOnBoard() || !gameModel.crashTest() {
+            gameTimer.stopTimer()
+        }
+
+        updateUI()
+    }
+    
+
 }
 
 // MARK: JoystickProtocol

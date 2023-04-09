@@ -31,6 +31,7 @@ class BoardView: UIView {
         super.init(frame: frame)
         backgroundColor = .white
         translatesAutoresizingMaskIntoConstraints = false
+        addSwipe()
     }
     
     required init?(coder: NSCoder) {
@@ -41,7 +42,6 @@ class BoardView: UIView {
         drawGrid ()
         drawAddPoint()
         drawSnake()
-        addSwipe()
     }
     
 // MARK: Drow object

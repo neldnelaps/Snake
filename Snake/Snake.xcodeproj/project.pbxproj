@@ -25,6 +25,7 @@
 		7541E78E29E16FB70093C592 /* JoystickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7541E78D29E16FB70093C592 /* JoystickView.swift */; };
 		7541E79029E1B3250093C592 /* ControlModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7541E78F29E1B3250093C592 /* ControlModel.swift */; };
 		7541E79229E1B7F30093C592 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7541E79129E1B7F30093C592 /* MainView.swift */; };
+		7541E79429E272300093C592 /* GameTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7541E79329E272300093C592 /* GameTimer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		7541E78D29E16FB70093C592 /* JoystickView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoystickView.swift; sourceTree = "<group>"; };
 		7541E78F29E1B3250093C592 /* ControlModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlModel.swift; sourceTree = "<group>"; };
 		7541E79129E1B7F30093C592 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		7541E79329E272300093C592 /* GameTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTimer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +154,7 @@
 				753E613D29DDC1C1003CF2F6 /* Moving.swift */,
 				753E613F29DEB8D6003CF2F6 /* SnakeModel.swift */,
 				753E614129DEBB20003CF2F6 /* AddPointModel.swift */,
+				7541E79329E272300093C592 /* GameTimer.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -319,6 +322,7 @@
 				753E614229DEBB20003CF2F6 /* AddPointModel.swift in Sources */,
 				7541E79229E1B7F30093C592 /* MainView.swift in Sources */,
 				7541E78E29E16FB70093C592 /* JoystickView.swift in Sources */,
+				7541E79429E272300093C592 /* GameTimer.swift in Sources */,
 				753E613A29DD618E003CF2F6 /* SnakeColor.swift in Sources */,
 				7541E79029E1B3250093C592 /* ControlModel.swift in Sources */,
 				753E613829DD5D20003CF2F6 /* GameModel.swift in Sources */,
