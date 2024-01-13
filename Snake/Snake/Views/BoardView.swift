@@ -7,31 +7,35 @@
 
 import UIKit
 
-protocol BoardProtocol : AnyObject {
-    func swipeGesture(direction: UISwipeGestureRecognizer.Direction)
-}
-
 class BoardView: UIView {
     
-    weak var boardDelegate : BoardProtocol?
-    
-    private let originX : CGFloat = 0
-    private let originY : CGFloat = 0
+    private var cols = 0
+    private var rows = 0
     private var cellSize: CGFloat = 0
     
-    var snake: [SnakeCell]?
+    var snake: [SnakeCell] = [] {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
     var addPoint: CGPoint?
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        cellSize = frame.width / CGFloat(GameModel.cols)
+        cellSize = frame.width / CGFloat(cols)
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
         translatesAutoresizingMaskIntoConstraints = false
-        addSwipe()
+    }
+    
+    convenience init(cols: Int, rows: Int) {
+        self.init()
+        self.cols = cols
+        self.rows = rows
     }
     
     required init?(coder: NSCoder) {
@@ -47,17 +51,15 @@ class BoardView: UIView {
 // MARK: Drow object
     
     private func drawGrid () {
-        
         let gridPath = UIBezierPath()
         
-        for i in 0...GameModel.rows {
-            gridPath.move(to: CGPoint(x: originX, y: originY + CGFloat(i) * cellSize))
-            gridPath.addLine(to: CGPoint(x: originX + CGFloat(GameModel.cols) * cellSize, y: originY + CGFloat(i) * cellSize))
+        for i in 0...rows {
+            gridPath.move(to: CGPoint(x: 0, y: CGFloat(i) * cellSize))
+            gridPath.addLine(to: CGPoint(x: CGFloat(cols) * cellSize, y: CGFloat(i) * cellSize))
         }
-        
-        for i in 0...GameModel.cols {
-            gridPath.move(to: CGPoint(x: originX + CGFloat(i) * cellSize, y: originY))
-            gridPath.addLine(to: CGPoint(x: originX + CGFloat(i) * cellSize, y: originY + CGFloat(GameModel.rows) * cellSize))
+        for i in 0...cols {
+            gridPath.move(to: CGPoint(x: CGFloat(i) * cellSize, y: 0))
+            gridPath.addLine(to: CGPoint(x: CGFloat(i) * cellSize, y: CGFloat(rows) * cellSize))
         }
         
         SnakeColor.grid.setStroke()
@@ -65,13 +67,13 @@ class BoardView: UIView {
     }
     
     private func drawSnake() {
-        guard let snake, !snake.isEmpty, let head = snake.first else { return }
+        guard !snake.isEmpty, let head = snake.first else { return }
         
         SnakeColor.snakeHead.setFill()
         UIBezierPath(
             roundedRect: CGRect(
-                x: originX + CGFloat(head.col) * cellSize,
-                y: originY + CGFloat(head.row) * cellSize,
+                x: CGFloat(head.col) * cellSize,
+                y: CGFloat(head.row) * cellSize,
                 width: cellSize,
                 height: cellSize),
             cornerRadius: 5).fill()
@@ -81,8 +83,8 @@ class BoardView: UIView {
             let cell = snake[i]
             UIBezierPath(
                 roundedRect: CGRect(
-                    x: originX + CGFloat(cell.col) * cellSize,
-                    y: originY + CGFloat(cell.row) * cellSize,
+                    x: CGFloat(cell.col) * cellSize,
+                    y: CGFloat(cell.row) * cellSize,
                     width: cellSize,
                     height: cellSize),
                 cornerRadius: 5).fill()
@@ -94,25 +96,10 @@ class BoardView: UIView {
         SnakeColor.foodPoint.setFill()
         UIBezierPath(
             roundedRect: CGRect(
-                x: originX + addPoint.x * cellSize,
-                y: originY + addPoint.y * cellSize,
+                x: addPoint.x * cellSize,
+                y: addPoint.y * cellSize,
                 width: cellSize,
                 height: cellSize),
             cornerRadius: 5).fill()
-    }
-    
-// MARK: UISwipeGestureRecognizer
-    
-    private func addSwipe() {
-        let directions: [UISwipeGestureRecognizer.Direction] = [.left, .right, .up, .down]
-        directions.forEach {
-            let swipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe))
-            swipe.direction = $0
-            self.addGestureRecognizer(swipe)
-        }
-    }
-
-    @objc private func handleSwipe(sender: UISwipeGestureRecognizer) {
-        boardDelegate?.swipeGesture(direction: sender.direction)
     }
 }

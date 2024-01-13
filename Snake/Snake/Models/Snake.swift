@@ -7,17 +7,13 @@
 
 import Foundation
 
-class SnakeModel {
+class Snake {
     
-    private var snakeArray : [SnakeCell]
+    private var snakeArray = [SnakeCell(col: 0, row: 0),
+                             SnakeCell(col: 0, row: 1)]
     var snake: [SnakeCell] { snakeArray }
     
-    var movingDirection : MovingDirection = .left
-    
-    init() {
-        snakeArray = [SnakeCell(col: GameModel.cols - 1 , row: 1),
-                      SnakeCell(col: GameModel.cols, row: 1)]
-    }
+    var movingDirection : MovingDirection = .right
     
     private func updateSnake(newHead: SnakeCell) {
         var newSnake : [SnakeCell] = []
@@ -42,10 +38,10 @@ class SnakeModel {
         }
     }
     
-    func eatAddPoint() {
-        let oldTail = snakeArray[snakeArray.count - 1]
-        snakeArray.append(oldTail)
-    }
+//    func eatAddPoint() {
+//        let oldTail = snakeArray[snakeArray.count - 1]
+//        snakeArray.append(oldTail)
+//    }
     
     func checkDirection (_ direction: MovingDirection) {
         switch direction {

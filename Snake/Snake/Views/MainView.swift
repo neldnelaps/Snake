@@ -8,27 +8,38 @@
 import Foundation
 import UIKit
 
+protocol BoardProtocol : AnyObject {
+    func swipeGesture(direction: UISwipeGestureRecognizer.Direction)
+}
+
 class MainView : UIView {
+    weak var boardDelegate : BoardProtocol?
     
-    let boardView = BoardView()
-    let joystickView = JoystickView()
+    private var gameDetails : GameDetails?
+    private var boardView = BoardView()
     
     let scoreLabel = UILabel()
     let nextLevelLabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        backgroundColor = .white
-        
-        configureBoardView()
-        configureJoystickView()
-        configureScoreLabel()
-        configureNextLevelLabel()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    convenience init(gameDetails: GameDetails) {
+        self.init()
+        self.gameDetails = gameDetails
+        self.boardView = BoardView(cols: gameDetails.cols, rows: gameDetails.rows)
+    
+        addSwipe()
+        backgroundColor = .white
+        
+        configureBoardView()
+        configureScoreLabel()
+        configureNextLevelLabel()
     }
     
     private func configureBoardView() {
@@ -38,16 +49,6 @@ class MainView : UIView {
             boardView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             boardView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             boardView.heightAnchor.constraint(equalTo: boardView.widthAnchor, constant: 1)
-        ])
-    }
-    
-    private func configureJoystickView() {
-        addSubview(joystickView)
-        NSLayoutConstraint.activate([
-            joystickView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -200),
-            joystickView.heightAnchor.constraint(equalToConstant: 100),
-            joystickView.widthAnchor.constraint(equalToConstant: 100),
-            joystickView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }
     
@@ -71,4 +72,24 @@ class MainView : UIView {
         ])
     }
     
+}
+
+// MARK: UISwipeGestureRecognizer
+extension MainView {
+    
+    private func addSwipe() {
+        let directions: [UISwipeGestureRecognizer.Direction] = [.left, .right, .up, .down]
+        directions.forEach {
+            let swipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe))
+            swipe.direction = $0
+            self.addGestureRecognizer(swipe)
+        }
+    }
+    
+    @objc private func handleSwipe(sender: UISwipeGestureRecognizer) {
+        let location = sender.location(in: self)
+        if boardView.frame.contains(location) {
+            boardDelegate?.swipeGesture(direction: sender.direction)
+        }
+    }
 }

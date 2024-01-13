@@ -33,4 +33,19 @@ final class SnakeTests: XCTestCase {
         }
     }
 
+    struct Person: Decodable {
+        var personName: String
+        enum CodingKeys: String, CodingKey {
+           case personName = "name"
+        }
+    }
+
+    <key>NSAppTransportSecurity</key>
+    <dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+    </dict>
+
+
+
 }
