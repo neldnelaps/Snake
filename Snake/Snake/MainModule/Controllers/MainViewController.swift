@@ -23,8 +23,9 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        gameModel = GameModel(vc: self, cols: gameDetails.cols, rows: gameDetails.rows)
+        gameModel = GameModel(vc: self, gameDelails: gameDetails)
         mainView?.boardDelegate = self
+        mainView?.updateScoreLabels(score: 0, to: gameDetails.toNextLevel)
     }
     
     init(gameDetails: GameDetails) {
@@ -44,6 +45,10 @@ class MainViewController: UIViewController {
     func updateAddPoint(_ addPoint: GameCell) {
         let boardView = mainView?.subviews[0] as? BoardView
         boardView?.addPoint = CGPoint(x: addPoint.col, y: addPoint.row)
+    }
+    
+    func updateScoreLabels(score: Int, to nextLabel: Int) {
+        mainView?.updateScoreLabels(score: score, to: nextLabel)
     }
 }
 

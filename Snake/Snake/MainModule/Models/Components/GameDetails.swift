@@ -10,5 +10,5 @@ import Foundation
 struct GameDetails {
     let cols: Int
     let rows: Int
-    let speed: Int
+    let toNextLevel: Int
 }

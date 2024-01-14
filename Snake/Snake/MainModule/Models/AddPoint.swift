@@ -14,7 +14,7 @@ class AddPoint {
         addPointCoordinate
     }
     
-    func randomizeFoodPoint(snake: [GameCell], gameCell: GameCell) {
+    func randomizeFoodPoint(snake: [GameCell], cols: Int, rows: Int) {
 
         func isOnSnake() -> Bool {
             for cell in snake {
@@ -26,8 +26,8 @@ class AddPoint {
         }
         
         while isOnSnake() {
-            addPointCoordinate.col = Int.random(in: 1..<gameCell.col)
-            addPointCoordinate.row = Int.random(in: 1..<gameCell.row)
+            addPointCoordinate.col = Int.random(in: 1..<cols)
+            addPointCoordinate.row = Int.random(in: 1..<rows)
         }
     }
 }

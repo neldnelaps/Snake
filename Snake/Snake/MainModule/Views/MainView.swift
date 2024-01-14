@@ -45,15 +45,13 @@ class MainView : UIView {
     private func configureBoardView() {
         addSubview(boardView)
         NSLayoutConstraint.activate([
-            boardView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10),
+            boardView.centerYAnchor.constraint(equalTo: centerYAnchor),
             boardView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             boardView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            boardView.heightAnchor.constraint(equalTo: boardView.widthAnchor, constant: 1)
         ])
     }
     
     private func configureScoreLabel() {
-        scoreLabel.text = "Score: 10"
         scoreLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(scoreLabel)
         NSLayoutConstraint.activate([
@@ -63,13 +61,17 @@ class MainView : UIView {
     }
     
     private func configureNextLevelLabel() {
-        nextLevelLabel.text = "Next Level: 10"
         nextLevelLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(nextLevelLabel)
         NSLayoutConstraint.activate([
             nextLevelLabel.topAnchor.constraint(equalTo: boardView.bottomAnchor, constant: 10),
             nextLevelLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10)
         ])
+    }
+    
+    func updateScoreLabels(score: Int, to nextLevel: Int) {
+        scoreLabel.text = "Score: \(score)"
+        nextLevelLabel.text = "To next level: \(nextLevel)"
     }
     
 }

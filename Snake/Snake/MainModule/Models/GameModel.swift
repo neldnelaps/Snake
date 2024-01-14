@@ -9,15 +9,17 @@ import Foundation
 
 class GameModel {
 
-    private var gameField: GameField
+    private var gameDelails: GameDetails
+    private var score: Score
     private var snake = Snake()
     private var addPoint = AddPoint()
     private let gameTimer = GameTimer()
     
     private weak var viewController: MainViewController?
     
-    init(vc: MainViewController, cols: Int, rows: Int) {
-        self.gameField = GameField(cols: cols, rows: rows)
+    init(vc: MainViewController, gameDelails: GameDetails) {
+        self.gameDelails = gameDelails
+        self.score = Score(next: gameDelails.toNextLevel)
         viewController = vc
         gameTimer.timerDelegate = self
         gameTimer.startTimer()
@@ -33,14 +35,19 @@ class GameModel {
     private func checkEating () {
         if snake.snake[0] == addPoint.coordinate {
             snake.eatAddPoint()
-            addPoint.randomizeFoodPoint(snake: snake.snake, gameCell: gameField.size)
+            addPoint.randomizeFoodPoint(snake: snake.snake, cols: gameDelails.cols, rows: gameDelails.rows)
+            
+            if score.addScore() {
+                gameTimer.speedIncrease()
+            }
+            viewController?.updateScoreLabels(score: score.amount, to: score.toNextLevel)
             viewController?.updateAddPoint(addPoint.coordinate)
         }
     }
     
     func isOnBoard() {
-        if snake.snake[0].row < 0 || snake.snake[0].row > gameField.size.row - 1 ||
-            snake.snake[0].col < 0 || snake.snake[0].col > gameField.size.col - 1 {
+        if snake.snake[0].row < 0 || snake.snake[0].row > gameDelails.rows - 1 ||
+            snake.snake[0].col < 0 || snake.snake[0].col > gameDelails.cols - 1 {
             gameTimer.stopTimer()
         }
     }

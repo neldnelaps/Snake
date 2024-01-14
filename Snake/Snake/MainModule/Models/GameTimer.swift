@@ -35,9 +35,11 @@ class GameTimer {
     }
     
     func speedIncrease () {
-        timerInterval = 0.1
+        if Float(timerInterval) > 0.2 {
+            timerInterval -= 0.1
+        }
         stopTimer()
         startTimer()
     }
-    
+
 }
