@@ -36,14 +36,14 @@ class MainViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func updateSnake(_ snake: [SnakeCell]) {
+    func updateSnake(_ snake: [GameCell]) {
         let boardView = mainView?.subviews[0] as? BoardView
         boardView?.snake = snake
     }
     
-    func updateAddPoint(_ addPoint: CGPoint) {
+    func updateAddPoint(_ addPoint: GameCell) {
         let boardView = mainView?.subviews[0] as? BoardView
-        boardView?.addPoint = addPoint
+        boardView?.addPoint = CGPoint(x: addPoint.col, y: addPoint.row)
     }
 }
 

@@ -8,15 +8,26 @@
 import Foundation
 
 class AddPoint {
-    private var col = 1
-    private var row = 4
+    private var addPointCoordinate = GameCell(col: 1, row: 4)
     
-    var coordinate: (col: Int, row: Int) {
-        (col, row)
+    var coordinate: GameCell {
+        addPointCoordinate
     }
     
-//    func randomizeFoodPoint() {
-//        col = Int.random(in: 1..<GameModel.cols)
-//        row = Int.random(in: 1..<GameModel.rows)
-//    }
+    func randomizeFoodPoint(snake: [GameCell], gameCell: GameCell) {
+
+        func isOnSnake() -> Bool {
+            for cell in snake {
+                if cell.col == addPointCoordinate.col && cell.row == addPointCoordinate.row {
+                    return true
+                }
+            }
+            return false
+        }
+        
+        while isOnSnake() {
+            addPointCoordinate.col = Int.random(in: 1..<gameCell.col)
+            addPointCoordinate.row = Int.random(in: 1..<gameCell.row)
+        }
+    }
 }

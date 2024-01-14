@@ -8,11 +8,12 @@
 import Foundation
 
 class GameField {
-    var cols: Int
-    var rows: Int
+    private var sizeField: GameCell
+    var size: GameCell {
+        sizeField
+    }
     
     init(cols: Int, rows: Int) {
-        self.cols = cols
-        self.rows = rows
+        sizeField = GameCell(col: cols, row: rows)
     }
 }

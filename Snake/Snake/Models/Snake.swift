@@ -9,39 +9,33 @@ import Foundation
 
 class Snake {
     
-    private var snakeArray = [SnakeCell(col: 0, row: 0),
-                             SnakeCell(col: 0, row: 1)]
-    var snake: [SnakeCell] { snakeArray }
+    private var snakeArray = [GameCell(col: 0, row: 0),
+                             GameCell(col: 0, row: 1)]
+    private var movingDirection : MovingDirection = .right
     
-    var movingDirection : MovingDirection = .right
-    
-    private func updateSnake(newHead: SnakeCell) {
-        var newSnake : [SnakeCell] = []
-        newSnake.append(newHead)
-        
-        for i in 0..<snakeArray.count - 1 {
-            newSnake.append(snakeArray[i])
-        }
-        snakeArray = newSnake
-    }
+    var snake: [GameCell] { snakeArray }
     
     func moveSnake() {
+        var newHead = GameCell(col: 0, row: 0)
+        
         switch movingDirection {
         case .left:
-            updateSnake(newHead: SnakeCell(col: snakeArray[0].col - 1 , row: snakeArray[0].row))
+            newHead = GameCell(col: snakeArray[0].col - 1, row: snakeArray[0].row)
         case .right:
-            updateSnake(newHead: SnakeCell(col: snakeArray[0].col + 1 , row: snakeArray[0].row))
+            newHead = GameCell(col: snakeArray[0].col + 1, row: snakeArray[0].row)
         case .up:
-            updateSnake(newHead: SnakeCell(col: snakeArray[0].col , row: snakeArray[0].row - 1))
+            newHead = GameCell(col: snakeArray[0].col, row: snakeArray[0].row - 1)
         case .down:
-            updateSnake(newHead: SnakeCell(col: snakeArray[0].col , row: snakeArray[0].row + 1))
+            newHead = GameCell(col: snakeArray[0].col, row: snakeArray[0].row + 1)
         }
+        snakeArray.insert(newHead, at: 0)
+        snakeArray.removeLast()
     }
     
-//    func eatAddPoint() {
-//        let oldTail = snakeArray[snakeArray.count - 1]
-//        snakeArray.append(oldTail)
-//    }
+    func eatAddPoint() {
+        let oldTail = snakeArray[snakeArray.count - 1]
+        snakeArray.append(oldTail)
+    }
     
     func checkDirection (_ direction: MovingDirection) {
         switch direction {
@@ -63,5 +57,10 @@ class Snake {
             }
         }
     }
-
+    
+    func crashTest() -> Bool {
+        let snakeWithoutHead = snakeArray.dropFirst()
+        let head = snakeArray[0]
+        return snakeWithoutHead.contains(where: { $0.col == head.col && $0.row == head.row })
+    }
 }
